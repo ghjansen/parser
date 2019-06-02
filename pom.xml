@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.ghjansen</groupId>
+    <artifactId>parser</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>parser</name>
+    <description>Text file parser and explorer</description>
+    <url>https://github.com/ghjansen/parser</url>
+    <inceptionYear>2019</inceptionYear>
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License, Version 3.0</name>
+            <url>http://www.gnu.org/licenses/agpl-3.0.txt</url>
+        </license>
+    </licenses>
+    <packaging>${packing.type}</packaging>
+    <developers>
+        <developer>
+            <id>ghjansen</id>
+            <name>Guilherme Humberto Jansen</name>
+            <email>contact.ghjansen@gmail.com</email>
+            <url>https://github.com/ghjansen</url>
+        </developer>
+    </developers>
+    <properties>
+        <!-- Packing type (supporting jar and war) -->
+        <packing.type>jar</packing.type>
+    </properties>
+
+
+</project>
