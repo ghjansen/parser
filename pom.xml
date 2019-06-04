@@ -28,7 +28,54 @@
     <properties>
         <!-- Packing type (supporting jar and war) -->
         <packing.type>jar</packing.type>
+        <!-- Encoding definitions -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
+        <!-- Java version definition -->
+        <java.version>1.8</java.version>
+        <!-- Dependencies and Plugins versions -->
+        <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
+        <mysql.connector.version>8.0.15</mysql.connector.version>
     </properties>
-
+    <!-- Spring Boot parent for better managing build package -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.5.RELEASE</version>
+    </parent>
+    <dependencies>
+        <!-- Spring Boot dependency for main web resources -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <!-- Spring Boot Data JPA for persistence -->
+        <!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        -->
+        <!-- MySQL Connector for integration with MySQL databases -->
+        <!--
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
+        -->
+    </dependencies>
+    <build>
+        <plugins>
+            <!-- Plugin for embedded servlet (mvn spring-boot:run) and proper packing -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
