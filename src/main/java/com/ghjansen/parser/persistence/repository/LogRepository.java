@@ -16,21 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ghjansen.parser.service;
+package com.ghjansen.parser.persistence.repository;
 
-import com.ghjansen.parser.persistence.model.File;
-import org.springframework.validation.annotation.Validated;
+import com.ghjansen.parser.persistence.model.Log;
+import org.springframework.data.repository.CrudRepository;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-@Validated
-public interface FileService {
-
-    @NotNull File save(File file);
-
-    @NotNull File create(@NotNull @NotEmpty String fileName, @NotNull @NotEmpty String md5);
-
-    void processFile(String filePath);
-
+public interface LogRepository extends CrudRepository<Log,Long> {
 }

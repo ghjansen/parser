@@ -18,19 +18,17 @@
 
 package com.ghjansen.parser.service;
 
-import com.ghjansen.parser.persistence.model.File;
+import com.ghjansen.parser.persistence.model.Log;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 
 @Validated
-public interface FileService {
+public interface LogService {
 
-    @NotNull File save(File file);
+    @NotNull Log save(Log log);
 
-    @NotNull File create(@NotNull @NotEmpty String fileName, @NotNull @NotEmpty String md5);
-
-    void processFile(String filePath);
+    @NotNull Log create(ZonedDateTime date, String ip, String request, Long status, String userAgent);
 
 }

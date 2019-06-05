@@ -18,19 +18,11 @@
 
 package com.ghjansen.parser.service;
 
-import com.ghjansen.parser.persistence.model.File;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 @Validated
-public interface FileService {
+public interface JobService {
 
-    @NotNull File save(File file);
 
-    @NotNull File create(@NotNull @NotEmpty String fileName, @NotNull @NotEmpty String md5);
-
-    void processFile(String filePath);
 
 }

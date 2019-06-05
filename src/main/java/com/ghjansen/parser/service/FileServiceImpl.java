@@ -28,11 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -49,20 +47,6 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void processFile(@NotNull @NotEmpty String filePath) {
-        log.info("Checking file: " + filePath);
-        java.io.File systemFile = getFile(filePath);
-        String md5 = generateMD5(filePath);
-        log.info("File MD5: " + md5);
-        if(isAlreadyProcessed(md5)){
-            log.info("File already processed before, parsing phase skipped");
-        } else {
-            log.info("File not processed yet, about to start parsing file ...");
-            File file = create(systemFile.getName(), md5);
-        }
-    }
-
-    @Override
     public @NotNull File save(File file) {
         return this.fileRepository.save(file);
     }
@@ -74,6 +58,20 @@ public class FileServiceImpl implements FileService {
         file.setFileName(fileName);
         file.setMd5(md5);
         return this.save(file);
+    }
+
+    @Override
+    public void processFile(String filePath) {
+        log.info("Checking file: " + filePath);
+        java.io.File systemFile = getFile(filePath);
+        String md5 = generateMD5(filePath);
+        log.info("File MD5: " + md5);
+        if(isAlreadyProcessed(md5)){
+            log.info("File already processed before, parsing phase skipped");
+        } else {
+            log.info("File not processed yet, about to start parsing file ...");
+            File file = create(systemFile.getName(), md5);
+        }
     }
 
     private java.io.File getFile(String filePath){

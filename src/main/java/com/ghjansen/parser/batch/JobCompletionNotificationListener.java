@@ -16,21 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ghjansen.parser.service;
+package com.ghjansen.parser.batch;
 
-import com.ghjansen.parser.persistence.model.File;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.listener.JobExecutionListenerSupport;
+import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+@Component
+public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 
-@Validated
-public interface FileService {
-
-    @NotNull File save(File file);
-
-    @NotNull File create(@NotNull @NotEmpty String fileName, @NotNull @NotEmpty String md5);
-
-    void processFile(String filePath);
-
+    @Override
+    public void afterJob(JobExecution jobExecution) {
+        super.afterJob(jobExecution);
+        System.out.println("Job execution status: " + String.valueOf(jobExecution.getStatus().getBatchStatus().name()));
+    }
 }

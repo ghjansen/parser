@@ -19,12 +19,20 @@
 package com.ghjansen.parser;
 
 import com.ghjansen.parser.service.FileService;
+import com.ghjansen.parser.service.JobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.*;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class ParserApplication implements CommandLineRunner {
@@ -40,7 +48,29 @@ public class ParserApplication implements CommandLineRunner {
     private FileService fileService;
 
     public static void main(String args[]){
-        SpringApplication.run(ParserApplication.class, args);
+        SpringApplication parser = new SpringApplication(ParserApplication.class);
+        parser.setWebApplicationType(WebApplicationType.NONE);
+        ConfigurableApplicationContext context = parser.run(args);
+
+        JobLauncher jobLauncher = context.getBean(JobLauncher.class);
+        Job job = context.getBean("logFileJob", Job.class);
+        JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
+
+        JobExecution jobExecution = null;
+        try {
+            jobExecution = jobLauncher.run(job, jobParameters);
+        } catch (JobExecutionAlreadyRunningException e) {
+            e.printStackTrace();
+        } catch (JobRestartException e) {
+            e.printStackTrace();
+        } catch (JobInstanceAlreadyCompleteException e) {
+            e.printStackTrace();
+        } catch (JobParametersInvalidException e) {
+            e.printStackTrace();
+        }
+        BatchStatus batchStatus = jobExecution.getStatus();
+        System.out.println("Status: " + batchStatus.getBatchStatus().name());
+
     }
 
     public void run(String... args) throws Exception {
