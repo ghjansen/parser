@@ -18,21 +18,19 @@
 
 package com.ghjansen.parser.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import com.ghjansen.parser.persistence.model.File;
+import org.springframework.validation.annotation.Validated;
 
-@Service
-public class HelloMessageService {
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-    @Value("${name:unknown}")
-    private String name;
+@Validated
+public interface FileService {
 
-    public String getMessage(){
-        return getMessage(name);
-    }
+    void processFile(@NotNull @NotEmpty String filePath);
 
-    public String getMessage(String name){
-        return "Hello " + name;
-    }
+    @NotNull File save(File file);
+
+    @NotNull File create(@NotNull @NotEmpty String fileName, @NotNull @NotEmpty String md5);
 
 }

@@ -30,12 +30,13 @@
         <packing.type>jar</packing.type>
         <!-- Encoding definitions -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!--<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Java version definition -->
         <java.version>1.8</java.version>
         <!-- Dependencies and Plugins versions -->
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
         <mysql.connector.version>8.0.15</mysql.connector.version>
+        <jackson.datatype.version>2.9.6</jackson.datatype.version>
     </properties>
     <!-- Spring Boot parent for better managing build package -->
     <parent>
@@ -44,28 +45,36 @@
         <version>2.1.5.RELEASE</version>
     </parent>
     <dependencies>
-        <!-- Spring Boot dependency for main web resources -->
+        <!-- Spring Boot dependency for main resources -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
+        <!-- Spring Boot Validation for validation constraints -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
         <!-- Spring Boot Data JPA for persistence -->
-        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
-        -->
         <!-- MySQL Connector for integration with MySQL databases -->
-        <!--
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.connector.version}</version>
         </dependency>
-        -->
+        <!-- Jackson dependency for Java Date/Time API defined by JSR310 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.datatype.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -74,8 +83,10 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
+                <configuration>
+                    <mainClass>com.ghjansen.parser.ParserApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

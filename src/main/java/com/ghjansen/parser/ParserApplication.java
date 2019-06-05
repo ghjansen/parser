@@ -18,7 +18,7 @@
 
 package com.ghjansen.parser;
 
-import com.ghjansen.parser.service.HelloMessageService;
+import com.ghjansen.parser.service.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,22 +31,38 @@ public class ParserApplication implements CommandLineRunner {
 
     private static Logger log = LoggerFactory.getLogger(ParserApplication.class);
 
-    @Autowired
-    private HelloMessageService helloMessageService;
+    private String accessLogArg;
+    private String startDateArg;
+    private String durationArg;
+    private String thresholdArg;
 
+    @Autowired
+    private FileService fileService;
 
     public static void main(String args[]){
         SpringApplication.run(ParserApplication.class, args);
     }
 
     public void run(String... args) throws Exception {
-        log.warn("Application started");
-        if(args.length > 0) {
-            System.out.println(helloMessageService.getMessage(args[0]));
-        } else {
-            System.out.println(helloMessageService.getMessage());
+        this.getArguments(args);
+        fileService.processFile(accessLogArg);
+
+    }
+
+    private void getArguments(String args[]){
+        for(String a : args){
+            String i[] = a.split("=");
+            if(i.length > 1){
+                if(i[0].startsWith("--accessLog")){
+                    this.accessLogArg = String.valueOf(i[1]);
+                } else if (String.valueOf(i[0]).equals("--startDate")) {
+                    this.startDateArg = String.valueOf(i[1]);
+                } else if (String.valueOf(i[0]).equals("--duration")) {
+                    this.durationArg = String.valueOf(i[1]);
+                } else if (String.valueOf(i[0]).equals("--threshold")) {
+                    this.thresholdArg = String.valueOf(i[1]);
+                }
+            }
         }
-        log.warn("Application finished");
-        System.exit(0);
     }
 }
