@@ -38,7 +38,7 @@ import java.time.ZonedDateTime;
 @Transactional
 public class FileServiceImpl implements FileService {
 
-    private static Logger log = LoggerFactory.getLogger(FileService.class);
+    private static Logger logger = LoggerFactory.getLogger(FileService.class);
 
     private FileRepository fileRepository;
 
@@ -52,7 +52,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public @NotNull File create(@NotNull @NotEmpty String fileName, @NotNull @NotEmpty String md5) {
+    public @NotNull File create(@NotNull @NotEmpty String md5, @NotNull @NotEmpty String fileName, @NotNull @NotEmpty String filePath) {
         File file = new File();
         file.setDateCreated(ZonedDateTime.now(ZoneId.of("UTC")));
         file.setFileName(fileName);
@@ -61,43 +61,49 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void processFile(String filePath) {
-        log.info("Checking file: " + filePath);
+    public File processFile(String filePath) {
         java.io.File systemFile = getFile(filePath);
         String md5 = generateMD5(filePath);
-        log.info("File MD5: " + md5);
-        if(isAlreadyProcessed(md5)){
-            log.info("File already processed before, parsing phase skipped");
+        File file = this.fileRepository.findById(md5).orElse(null);
+        if (file != null) {
+            logger.info("File already parsed before, parse job skipped");
         } else {
-            log.info("File not processed yet, about to start parsing file ...");
-            File file = create(systemFile.getName(), md5);
+            file = create(md5, systemFile.getName(), filePath);
         }
+        return file;
     }
 
-    private java.io.File getFile(String filePath){
+    @Override
+    public boolean isEmptyDatabase() {
+        return !this.fileRepository.findAll().iterator().hasNext();
+    }
+
+    private java.io.File getFile(String filePath) {
         java.io.File systemFile = new java.io.File(filePath);
-        if(!systemFile.exists()){
-            log.error("File " + filePath + " does not exist");
+        if (!systemFile.exists()) {
+            logger.error("File " + filePath + " does not exist");
             System.exit(1);
         }
         return systemFile;
     }
 
-    private String generateMD5(String filePath){
+    private String generateMD5(String filePath) {
+        String md5 = null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(Files.readAllBytes(Paths.get(filePath)));
             byte[] digest = md.digest();
-            return DatatypeConverter.printHexBinary(digest).toUpperCase();
+            md5 = DatatypeConverter.printHexBinary(digest).toUpperCase();
+            logger.info("File MD5 is " + md5);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.error(e.getMessage());
             e.printStackTrace();
             System.exit(1);
         }
-        return null;
+        return md5;
     }
 
-    private boolean isAlreadyProcessed(String md5){
+    private boolean isAlreadyProcessed(String md5) {
         File recordFile = this.fileRepository.findById(md5).orElse(null);
         return recordFile != null ? true : false;
     }

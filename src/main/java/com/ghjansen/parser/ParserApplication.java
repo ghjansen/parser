@@ -18,15 +18,7 @@
 
 package com.ghjansen.parser;
 
-import com.ghjansen.parser.service.FileService;
-import com.ghjansen.parser.service.JobService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.*;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
+import com.ghjansen.parser.service.ParseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,23 +27,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class ParserApplication implements CommandLineRunner {
-
-    private static Logger log = LoggerFactory.getLogger(ParserApplication.class);
-
-    private String accessLogArg;
-    private String startDateArg;
-    private String durationArg;
-    private String thresholdArg;
+public class ParserApplication implements CustomCommandLineRunner {
 
     @Autowired
-    private FileService fileService;
+    private ParseService parseService;
+    private static ConfigurableApplicationContext context;
 
     public static void main(String args[]){
         SpringApplication parser = new SpringApplication(ParserApplication.class);
         parser.setWebApplicationType(WebApplicationType.NONE);
-        ConfigurableApplicationContext context = parser.run(args);
+        context = parser.run(args);
 
+        /*
         JobLauncher jobLauncher = context.getBean(JobLauncher.class);
         Job job = context.getBean("logFileJob", Job.class);
         JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
@@ -70,29 +57,12 @@ public class ParserApplication implements CommandLineRunner {
         }
         BatchStatus batchStatus = jobExecution.getStatus();
         System.out.println("Status: " + batchStatus.getBatchStatus().name());
-
+        */
     }
 
-    public void run(String... args) throws Exception {
-        this.getArguments(args);
-        fileService.processFile(accessLogArg);
-
+    public void run(ConfigurableApplicationContext context, String... args) throws Exception {
+        parseService.execute(context, args);
+        System.exit(0);
     }
 
-    private void getArguments(String args[]){
-        for(String a : args){
-            String i[] = a.split("=");
-            if(i.length > 1){
-                if(i[0].startsWith("--accessLog")){
-                    this.accessLogArg = String.valueOf(i[1]);
-                } else if (String.valueOf(i[0]).equals("--startDate")) {
-                    this.startDateArg = String.valueOf(i[1]);
-                } else if (String.valueOf(i[0]).equals("--duration")) {
-                    this.durationArg = String.valueOf(i[1]);
-                } else if (String.valueOf(i[0]).equals("--threshold")) {
-                    this.thresholdArg = String.valueOf(i[1]);
-                }
-            }
-        }
-    }
 }

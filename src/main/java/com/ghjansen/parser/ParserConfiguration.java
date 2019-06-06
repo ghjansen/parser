@@ -28,6 +28,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.RepositoryItemWriter;
@@ -52,8 +53,9 @@ public class ParserConfiguration {
 
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
-
+/*
     @Bean
+    @StepScope
     public FlatFileItemReader<LogDTO> logFileReader(){
         FlatFileItemReader<LogDTO> reader = new FlatFileItemReader();
         //TODO set next line at runtime!
@@ -71,6 +73,7 @@ public class ParserConfiguration {
     }
 
     @Bean
+    @StepScope
     public ItemProcessor<LogDTO,Log> logFileProcessor(){
         return new LogProcessor();
     }
@@ -81,6 +84,7 @@ public class ParserConfiguration {
     }
 
     @Bean
+    @StepScope
     public RepositoryItemWriter<Log> logFileWriter(LogRepository logRepository){
         DefaultCrudMethods defaultCrudMethods = new DefaultCrudMethods(repositoryMetadata());
         RepositoryItemWriter<Log> writer = new RepositoryItemWriter<>();
@@ -101,11 +105,13 @@ public class ParserConfiguration {
 
     @Bean
     public Job logFileJob(JobCompletionNotificationListener listener, LogRepository logRepository){
-        return jobBuilderFactory.get("logFileJob")
+        //TODO append md5 to job name so it enforces a new unique run
+        return jobBuilderFactory.get("logFileJob-" + System.currentTimeMillis())
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .flow(logFileStep(logRepository))
                 .end()
                 .build();
     }
+    */
 }

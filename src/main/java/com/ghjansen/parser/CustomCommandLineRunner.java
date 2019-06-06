@@ -16,18 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ghjansen.parser.service;
+package com.ghjansen.parser;
 
-import com.ghjansen.parser.persistence.model.File;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-@Validated
-public interface JobService {
-
-    void executeParseJob(@NotNull ConfigurableApplicationContext context, @NotNull File file);
-
+@FunctionalInterface
+public interface CustomCommandLineRunner {
+    void run(ConfigurableApplicationContext context, String... args) throws Exception;
 }

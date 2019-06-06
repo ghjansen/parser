@@ -32,16 +32,25 @@ public class File {
     private ZonedDateTime dateCreated;
     @NotNull(message = "File name is required")
     private String fileName;
+    @NotNull(message = "File path is required")
+    private String filePath;
 
-    public File(@NotNull(message = "File md5 is required") String md5, @NotNull(message = "File date created is required") ZonedDateTime dateCreated, @NotNull(message = "File name is required") String fileName) {
+    public File(@NotNull(message = "File md5 is required") String md5, @NotNull(message = "File date created is required") ZonedDateTime dateCreated, @NotNull(message = "File name is required") String fileName, @NotNull(message = "File path is required") String filePath) {
         this.md5 = md5;
         this.dateCreated = dateCreated;
         this.fileName = fileName;
+        this.filePath = filePath;
     }
 
     public File() {
     }
+    public String getMd5() {
+        return md5;
+    }
 
+    public void setMd5(String md5) {
+        this.md5 = md5;
+    }
     public ZonedDateTime getDateCreated() {
         return dateCreated;
     }
@@ -58,11 +67,11 @@ public class File {
         this.fileName = fileName;
     }
 
-    public String getMd5() {
-        return md5;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setMd5(String md5) {
-        this.md5 = md5;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

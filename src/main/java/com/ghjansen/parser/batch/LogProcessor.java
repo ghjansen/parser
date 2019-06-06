@@ -21,9 +21,7 @@ package com.ghjansen.parser.batch;
 import com.ghjansen.parser.persistence.dto.LogDTO;
 import com.ghjansen.parser.persistence.model.Log;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 

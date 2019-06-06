@@ -18,16 +18,14 @@
 
 package com.ghjansen.parser.service;
 
-import com.ghjansen.parser.persistence.model.File;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Validated
-public interface JobService {
+public interface ParseService {
 
-    void executeParseJob(@NotNull ConfigurableApplicationContext context, @NotNull File file);
+    void execute(@NotNull ConfigurableApplicationContext context, String args[]);
 
 }

@@ -18,6 +18,8 @@
 
 package com.ghjansen.parser.batch;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.stereotype.Component;
@@ -25,9 +27,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 
+    private static Logger logger = LoggerFactory.getLogger(JobCompletionNotificationListener.class);
+
     @Override
     public void afterJob(JobExecution jobExecution) {
         super.afterJob(jobExecution);
-        System.out.println("Job execution status: " + String.valueOf(jobExecution.getStatus().getBatchStatus().name()));
+        logger.info("Job execution status: " + String.valueOf(jobExecution.getStatus().getBatchStatus().name()));
     }
 }

@@ -29,8 +29,10 @@ public interface FileService {
 
     @NotNull File save(File file);
 
-    @NotNull File create(@NotNull @NotEmpty String fileName, @NotNull @NotEmpty String md5);
+    @NotNull File create(@NotNull @NotEmpty String md5, @NotNull @NotEmpty String fileName, @NotNull @NotEmpty String filePath);
 
-    void processFile(String filePath);
+    File processFile(String filePath);
+
+    boolean isEmptyDatabase();
 
 }
