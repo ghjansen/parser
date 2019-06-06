@@ -19,7 +19,15 @@
 package com.ghjansen.parser.persistence.repository;
 
 import com.ghjansen.parser.persistence.model.Log;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.time.ZonedDateTime;
 
 public interface LogRepository extends CrudRepository<Log,Long> {
+
+    @Query(value = "SELECT counter.ip FROM (SELECT DISTINCT(l.ip) AS ip, count(*) AS occurrences FROM Log l WHERE (l.date BETWEEN :startDate AND :endDate) GROUP BY l.ip) counter WHERE counter.occurrences >= :threshold", nativeQuery = true)
+    Iterable<String> findIpsByDateThreshold(@Param("startDate")ZonedDateTime startDate, @Param("endDate") ZonedDateTime endDateTime, @Param("threshold") Long threshold);
+
 }

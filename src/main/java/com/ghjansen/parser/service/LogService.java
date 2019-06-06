@@ -21,6 +21,7 @@ package com.ghjansen.parser.service;
 import com.ghjansen.parser.persistence.model.Log;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
@@ -30,5 +31,7 @@ public interface LogService {
     @NotNull Log save(Log log);
 
     @NotNull Log create(ZonedDateTime date, String ip, String request, Long status, String userAgent);
+
+    void searchDatabase(@NotNull @NotEmpty String startDate, @NotNull @NotEmpty String duration, @NotNull @NotEmpty String threshold);
 
 }

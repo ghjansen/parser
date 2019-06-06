@@ -36,15 +36,18 @@ public class ParseServiceImpl implements ParseService {
     private String thresholdArg;
     private FileService fileService;
     private JobService jobService;
+    private LogService logService;
 
-    public ParseServiceImpl(FileService fileService, JobService jobService) {
+    public ParseServiceImpl(FileService fileService, JobService jobService, LogService logService) {
         this.fileService = fileService;
         this.jobService = jobService;
+        this.logService = logService;
     }
 
     public void execute(String args[]){
         prepareArguments(args);
         parse();
+        search();
     }
 
     private void prepareArguments(String args[]){
@@ -105,6 +108,10 @@ public class ParseServiceImpl implements ParseService {
 
     private void executeParseJob(File file){
         this.jobService.executeParseJob(file);
+    }
+
+    private void search(){
+        this.logService.searchDatabase(startDateArg, durationArg, thresholdArg);
     }
 
 }

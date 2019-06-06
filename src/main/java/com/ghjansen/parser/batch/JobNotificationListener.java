@@ -24,14 +24,13 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Component
-public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
+public class JobNotificationListener extends JobExecutionListenerSupport {
 
-    private static Logger logger = LoggerFactory.getLogger(JobCompletionNotificationListener.class);
+    private static Logger logger = LoggerFactory.getLogger(JobNotificationListener.class);
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
@@ -45,7 +44,6 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
         Date start = jobExecution.getStartTime();
         Date finish = jobExecution.getEndTime();
         long time = ChronoUnit.MILLIS.between(start.toInstant(), finish.toInstant());
-
         logger.info("Finished parsing file (time = " + time + "ms; " +
                 "writeCount = "+jobExecution.getStepExecutions().iterator().next().getWriteCount()+"; " +
                 "exitStatus = "+jobExecution.getExitStatus().getExitCode() + ")" );
