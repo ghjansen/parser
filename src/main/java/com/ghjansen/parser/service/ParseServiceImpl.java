@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class ParseServiceImpl implements ParseService {
 
     private static Logger logger = LoggerFactory.getLogger(ParseService.class);
@@ -43,9 +42,9 @@ public class ParseServiceImpl implements ParseService {
         this.jobService = jobService;
     }
 
-    public void execute(ConfigurableApplicationContext context, String args[]){
+    public void execute(String args[]){
         prepareArguments(args);
-        parse(context);
+        parse();
     }
 
     private void prepareArguments(String args[]){
@@ -87,14 +86,16 @@ public class ParseServiceImpl implements ParseService {
         if(fail) System.exit(1);
     }
 
-    private void parse(ConfigurableApplicationContext context){
+    private void parse(){
         if(file){
             File file = this.fileService.processFile(accessLogArg);
             if(file != null){
-                executeParseJob(context, file);
+                executeParseJob(file);
+            } else {
+                logger.info("Parse job skipped");
             }
         } else {
-            logger.warn("No file informed, parse job skipped");
+            logger.warn("No file informed, parse job skipped, using existing database");
             if(this.fileService.isEmptyDatabase()){
                 logger.error("No file was parsed before, the database is empty");
                 System.exit(1);
@@ -102,8 +103,8 @@ public class ParseServiceImpl implements ParseService {
         }
     }
 
-    private void executeParseJob(ConfigurableApplicationContext context, File file){
-        this.jobService.executeParseJob(context, file);
+    private void executeParseJob(File file){
+        this.jobService.executeParseJob(file);
     }
 
 }

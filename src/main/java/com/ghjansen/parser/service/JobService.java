@@ -28,6 +28,6 @@ import javax.validation.constraints.NotNull;
 @Validated
 public interface JobService {
 
-    void executeParseJob(@NotNull ConfigurableApplicationContext context, @NotNull File file);
+    void executeParseJob(@NotNull File file);
 
 }

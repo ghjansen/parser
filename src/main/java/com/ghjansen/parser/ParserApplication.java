@@ -22,46 +22,20 @@ import com.ghjansen.parser.service.ParseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class ParserApplication implements CustomCommandLineRunner {
+public class ParserApplication implements CommandLineRunner {
 
     @Autowired
     private ParseService parseService;
-    private static ConfigurableApplicationContext context;
 
     public static void main(String args[]){
-        SpringApplication parser = new SpringApplication(ParserApplication.class);
-        parser.setWebApplicationType(WebApplicationType.NONE);
-        context = parser.run(args);
-
-        /*
-        JobLauncher jobLauncher = context.getBean(JobLauncher.class);
-        Job job = context.getBean("logFileJob", Job.class);
-        JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
-
-        JobExecution jobExecution = null;
-        try {
-            jobExecution = jobLauncher.run(job, jobParameters);
-        } catch (JobExecutionAlreadyRunningException e) {
-            e.printStackTrace();
-        } catch (JobRestartException e) {
-            e.printStackTrace();
-        } catch (JobInstanceAlreadyCompleteException e) {
-            e.printStackTrace();
-        } catch (JobParametersInvalidException e) {
-            e.printStackTrace();
-        }
-        BatchStatus batchStatus = jobExecution.getStatus();
-        System.out.println("Status: " + batchStatus.getBatchStatus().name());
-        */
+        SpringApplication.run(ParserApplication.class, args);
     }
 
-    public void run(ConfigurableApplicationContext context, String... args) throws Exception {
-        parseService.execute(context, args);
+    public void run(String... args) throws Exception {
+        parseService.execute(args);
         System.exit(0);
     }
 

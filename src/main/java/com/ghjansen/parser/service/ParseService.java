@@ -21,11 +21,8 @@ package com.ghjansen.parser.service;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotNull;
-
-@Validated
 public interface ParseService {
 
-    void execute(@NotNull ConfigurableApplicationContext context, String args[]);
+    void execute(String args[]);
 
 }

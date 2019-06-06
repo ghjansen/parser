@@ -54,9 +54,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public @NotNull File create(@NotNull @NotEmpty String md5, @NotNull @NotEmpty String fileName, @NotNull @NotEmpty String filePath) {
         File file = new File();
+        file.setMd5(md5);
         file.setDateCreated(ZonedDateTime.now(ZoneId.of("UTC")));
         file.setFileName(fileName);
-        file.setMd5(md5);
+        file.setFilePath(filePath);
         return this.save(file);
     }
 
@@ -66,7 +67,8 @@ public class FileServiceImpl implements FileService {
         String md5 = generateMD5(filePath);
         File file = this.fileRepository.findById(md5).orElse(null);
         if (file != null) {
-            logger.info("File already parsed before, parse job skipped");
+            logger.info("File already parsed before");
+            return null;
         } else {
             file = create(md5, systemFile.getName(), filePath);
         }

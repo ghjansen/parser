@@ -18,31 +18,12 @@
 
 package com.ghjansen.parser;
 
-import com.ghjansen.parser.batch.JobCompletionNotificationListener;
-import com.ghjansen.parser.batch.LogProcessor;
-import com.ghjansen.parser.persistence.dto.LogDTO;
-import com.ghjansen.parser.persistence.model.Log;
-import com.ghjansen.parser.persistence.repository.LogRepository;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.data.RepositoryItemWriter;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
-import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.repository.core.RepositoryMetadata;
-import org.springframework.data.repository.core.support.DefaultCrudMethods;
-import org.springframework.data.repository.core.support.DefaultRepositoryMetadata;
 
 @Configuration
 @EnableBatchProcessing
@@ -53,65 +34,8 @@ public class ParserConfiguration {
 
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
-/*
-    @Bean
-    @StepScope
-    public FlatFileItemReader<LogDTO> logFileReader(){
-        FlatFileItemReader<LogDTO> reader = new FlatFileItemReader();
-        //TODO set next line at runtime!
-        reader.setResource(new ClassPathResource("access.log"));
-        reader.setLineMapper(new DefaultLineMapper<LogDTO>() {{
-            DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-            lineTokenizer.setDelimiter("|");
-            lineTokenizer.setNames(new String[]{"date", "ip", "request", "status", "userAgent"});
-            setLineTokenizer(lineTokenizer);
-            setFieldSetMapper(new BeanWrapperFieldSetMapper<LogDTO>(){{
-                setTargetType(LogDTO.class);
-            }});
-        }});
-        return reader;
-    }
 
-    @Bean
-    @StepScope
-    public ItemProcessor<LogDTO,Log> logFileProcessor(){
-        return new LogProcessor();
-    }
+    @Autowired
+    public JobLauncher jobLauncher;
 
-    @Bean
-    public RepositoryMetadata repositoryMetadata(){
-        return new DefaultRepositoryMetadata(LogRepository.class);
-    }
-
-    @Bean
-    @StepScope
-    public RepositoryItemWriter<Log> logFileWriter(LogRepository logRepository){
-        DefaultCrudMethods defaultCrudMethods = new DefaultCrudMethods(repositoryMetadata());
-        RepositoryItemWriter<Log> writer = new RepositoryItemWriter<>();
-        writer.setRepository(logRepository);
-        writer.setMethodName(defaultCrudMethods.getSaveMethod().get().getName());
-        return writer;
-    }
-
-    @Bean
-    public Step logFileStep(LogRepository logRepository){
-        return stepBuilderFactory.get("logFileStep")
-                .<LogDTO,Log>chunk(1000)
-                .reader(logFileReader())
-                .processor(logFileProcessor())
-                .writer(logFileWriter(logRepository))
-                .build();
-    }
-
-    @Bean
-    public Job logFileJob(JobCompletionNotificationListener listener, LogRepository logRepository){
-        //TODO append md5 to job name so it enforces a new unique run
-        return jobBuilderFactory.get("logFileJob-" + System.currentTimeMillis())
-                .incrementer(new RunIdIncrementer())
-                .listener(listener)
-                .flow(logFileStep(logRepository))
-                .end()
-                .build();
-    }
-    */
 }
