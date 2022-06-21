@@ -35,7 +35,7 @@
         <java.version>1.8</java.version>
         <!-- Dependencies and Plugins versions -->
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
-        <mysql.connector.version>8.0.15</mysql.connector.version>
+        <mysql.connector.version>8.0.28</mysql.connector.version>
         <jackson.datatype.version>2.9.6</jackson.datatype.version>
     </properties>
     <!-- Spring Boot parent for better managing build package -->
